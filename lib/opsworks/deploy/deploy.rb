@@ -21,7 +21,7 @@ module Opsworks::Deploy
     raise ArgumentError, "Must set IAM_KEY environment variable" if iam_key.nil? || iam_key.length == 0
     raise ArgumentError, "Must set IAM_SECRET environment variable" if iam_secret.nil? || iam_secret.length == 0
 
-    AWS.config(access_key_id: iam_key, secret_access_key: iam_secret)
+    Aws.config(access_key_id: iam_key, secret_access_key: iam_secret)
   end
 
   def self.deploy(opts={})
@@ -32,10 +32,10 @@ module Opsworks::Deploy
   class Deployment
     attr_reader :client, :deployment, :options
 
-    def initialize(options, client = AWS.ops_works.client)
+    def initialize(options, client = Aws::OpsWorks::Client.new(region: 'us-east-1'))
       @options = {
         migrate: true,
-        wait: false,
+        wait: true,
         env: nil
       }.merge(options)
       @client = client

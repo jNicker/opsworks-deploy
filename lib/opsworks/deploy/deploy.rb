@@ -2,8 +2,6 @@ require 'opsworks/deploy/version'
 require 'aws-sdk'
 require 'yaml'
 
-require 'pry'
-
 module Opsworks::Deploy
 
   DEPLOYMENT_POLL_INTERVAL = 10

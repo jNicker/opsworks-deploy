@@ -20,6 +20,7 @@ module Opsworks::Deploy
         wait: true,
         env: nil
       }.merge(options)
+      raise "Must define #{current_environment} in config/deploy/stacks.yml"     unless config
       raise 'Must set stack_id for environment'   unless config.has_key?('stack_id')
       raise 'Must set app_id for environment'     unless config.has_key?('app_id')
       raise 'Must set region for environment'     unless config.has_key?('region')
@@ -36,7 +37,11 @@ module Opsworks::Deploy
     end
 
     def config
-      @config ||= configured_environments.fetch(current_environment)
+      @config ||= (
+        configured_environments.fetch(current_environment) do |key|
+          raise "Environment #{current_environment} not defined in config/deploy/stacks.yml"
+        end
+      )
     end
 
     private
